@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="New_Town_Ex" tilewidth="32" tileheight="32" spacing="1" margin="1">
+  <image source="New_Town_Ex.png" width="544" height="416"/>
+  <tile id="168">
+   <properties>
+    <property name="Port" value="True"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="193" name="meta_tiles" tilewidth="32" tileheight="32" spacing="1" margin="1">
+  <image source="meta_tiles.png" width="67" height="34"/>
+  <tile id="0">
+   <properties>
+    <property name="Blockage" value="True"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="Port" value="True"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Background" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   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
+  </data>
+ </layer>
+ <objectgroup name="PlayerLayer" width="100" height="100">
+  <object name="PlayerStartPoint" x="71" y="236" width="68" height="68"/>
+ </objectgroup>
+ <layer name="LandLayer" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt07EJwEAQA8Hrvyt/ZY4d+uFggxlQBYtmvp7F8Z8eLXq06NGiR5MeLXq06NGiR8sZPUr8o2Gjgx739GjRo0WPJj2atGjSAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACoeAGxpCMT
+  </data>
+ </layer>
+</map>
