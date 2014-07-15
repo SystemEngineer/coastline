@@ -1,5 +1,6 @@
 #include "HelloWorldScene.h"
 #include "PortPopupLayer.h"
+#include "PortMap.h"
 
 USING_NS_CC;
 
@@ -9,14 +10,15 @@ Scene* HelloWorld::createScene()
     auto scene = Scene::create();
     
     // 'layer' is an autorelease object
-    auto layer = HelloWorld::create();
-    auto port_popup_layer = PortPopupLayer::create();
-    
+    auto pPopupLayer = PortPopupLayer::create();
+    InitPortCoordArray();
     // add layer as a child to scene
     // Attention: tag is the 3rd argument!
+    scene->addChild(pPopupLayer,100,POPUP_LAYER_TAG);
+    
+    auto layer = HelloWorld::create();
     scene->addChild(layer,0,BACKGROUND_LAYER_TAG);
-    scene->addChild(port_popup_layer,100,POPUP_LAYER_TAG);
-
+   
     // return the scene
     return scene;
 }
@@ -157,26 +159,26 @@ void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event)
     if (abs(diff.x) > abs(diff.y)) {
         if (diff.x > 0) {
             //Move half of the tile block size each touch
-            playerPos.x += _TileMap->getTileSize().width / 2;
+            playerPos.x += _TileMap->getTileSize().width ;
             //Player may be fliped according its directory
             _Player->runAction(actionTo2);
         }
         else {
-            playerPos.x -= _TileMap->getTileSize().width / 2;
+            playerPos.x -= _TileMap->getTileSize().width ;
             _Player->runAction(actionTo1);
         }
     }
     else {
         if (diff.y > 0) {
-            playerPos.y += _TileMap->getTileSize().height / 2;
+            playerPos.y += _TileMap->getTileSize().height ;
         }
         else {
-            playerPos.y -= _TileMap->getTileSize().height / 2;
+            playerPos.y -= _TileMap->getTileSize().height ;
         }
     }
     
-    if (playerPos.x <= (_TileMap->getMapSize().width * _TileMap->getMapSize().width) &&
-        playerPos.y <= (_TileMap->getMapSize().height * _TileMap->getMapSize().height) &&
+    if (playerPos.x <= (_TileMap->getMapSize().width * _TileMap->getTileSize().width) &&
+        playerPos.y <= (_TileMap->getMapSize().height * _TileMap->getTileSize().height) &&
         playerPos.y >= 0 &&
         playerPos.x >= 0)
     {
@@ -202,19 +204,14 @@ void HelloWorld::setPlayerPosition(Point position)
                 return;
             }
             else if ("True" == dockable) {
-                //Show the port
+                //Show the port sub image
                 PortPopupLayer* pPopupLayer = (PortPopupLayer*)Director::getInstance()->getRunningScene()->getChildByTag(POPUP_LAYER_TAG);
                 //Attention to the position coord.
                 auto winSize = Director::getInstance()->getWinSize();
-                pPopupLayer->createBgSprite("New_Town_Ex.png", Point(winSize.width/2, winSize.height/2));
+                pPopupLayer->createBgSprite(g_PortCoordArray[int(tileCoord.x)][int(tileCoord.y)], Point(winSize.width/2, winSize.height/2));                
             }
         }
     }
-    else{
-        PortPopupLayer* pPopupLayer = (PortPopupLayer*)Director::getInstance()->getRunningScene()->getChildByTag(POPUP_LAYER_TAG);
-        pPopupLayer->destoryBgSprite();
-    }
-
     _Player->setPosition(position);
 }
 

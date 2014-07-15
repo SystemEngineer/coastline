@@ -11,7 +11,7 @@
 
 #include "cocos2d.h"
 
-class PortPopupLayer : public cocos2d::Layer
+class PortPopupLayer : public cocos2d::LayerColor
 {
 public:
     PortPopupLayer();
@@ -22,8 +22,13 @@ public:
     
     void createBgSprite(const char* bg_image,cocos2d::Point posCenter);
     void destoryBgSprite();
-    cocos2d::CCLabelTTF* createTitle(const char* title, int fontzise = 20);
+    cocos2d::LabelTTF* createTitle(const char* title, int fontzise = 20);
     bool addButton(const char* normal_img, const char* click_img, const char* title, int tag = 0);
+    
+    virtual bool onTouchBegan(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
+    virtual void onTouchEnded(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
+    
+    cocos2d::EventListenerTouchOneByOne *_m_pListener;
 
 private:
     cocos2d::Sprite *_m_BgSprite;
