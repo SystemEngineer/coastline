@@ -198,6 +198,7 @@ void HelloWorld::setPlayerPosition(Point position)
         auto properties = _TileMap->getPropertiesForGID(tileGID).asValueMap();
         if (!properties.empty()) {
             //Properties and values are defined in tiled map
+            //All attributes lies in the "LandLayer"
             auto collision = properties["Blockage"].asString();
             auto dockable = properties["Port"].asString();
             if ("True" == collision) {
@@ -208,6 +209,7 @@ void HelloWorld::setPlayerPosition(Point position)
                 PortPopupLayer* pPopupLayer = (PortPopupLayer*)Director::getInstance()->getRunningScene()->getChildByTag(POPUP_LAYER_TAG);
                 //Attention to the position coord.
                 auto winSize = Director::getInstance()->getWinSize();
+                //Get port name by coord
                 pPopupLayer->createBgSprite(g_PortCoordArray[int(tileCoord.x)][int(tileCoord.y)], Point(winSize.width/2, winSize.height/2));                
             }
         }
