@@ -22,7 +22,8 @@ public:
     
     void createBgSprite(const char* bg_image,cocos2d::Point posCenter);
     void destoryBgSprite();
-    cocos2d::LabelTTF* createTitle(const char* title, int fontzise = 20);
+    void createTitle(const char* title, int fontzise, cocos2d::Point position);
+    void createIntro(const char* intro, int fontzise, cocos2d::Point position);
     bool addButton(const char* normal_img, const char* click_img, const char* title, int tag = 0);
     
     virtual bool onTouchBegan(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
@@ -32,6 +33,8 @@ public:
 
 private:
     cocos2d::Sprite *_m_BgSprite;
+    cocos2d::LabelTTF *_m_TitleLable;
+    cocos2d::LabelTTF *_m_IntroLable;
 };
 
 #endif
