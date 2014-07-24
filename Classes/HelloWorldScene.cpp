@@ -1,6 +1,5 @@
 #include "HelloWorldScene.h"
 #include "PortPopupLayer.h"
-#include "PortMap.h"
 
 USING_NS_CC;
 
@@ -11,7 +10,6 @@ Scene* HelloWorld::createScene()
     
     // 'layer' is an autorelease object
     auto pPopupLayer = PortPopupLayer::create();
-    InitPortCoordArray();
     // add layer as a child to scene
     // Attention: tag is the 3rd argument!
     scene->addChild(pPopupLayer,100,POPUP_LAYER_TAG);
@@ -78,6 +76,7 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
 */
+    
     //Create tile map with file in Resource directory
     std::string file = "MyTileMap1.tmx";
     auto str = String::createWithContentsOfFile(FileUtils::getInstance()->fullPathForFilename(file.c_str()).c_str());
@@ -210,7 +209,9 @@ void HelloWorld::setPlayerPosition(Point position)
                 //Attention to the position coord.
                 auto winSize = Director::getInstance()->getWinSize();
                 //Get port name by coord
-                pPopupLayer->createBgSprite(g_PortCoordArray[int(tileCoord.x)][int(tileCoord.y)], Point(winSize.width/2, winSize.height/2));                
+                CCString* tmp_str = CCString::createWithFormat("%d:%d",int(tileCoord.x),int(tileCoord.y));
+                pPopupLayer->createBgSprite(tmp_str->getCString(), Point(winSize.width/2, winSize.height/2));
+                
             }
         }
     }
