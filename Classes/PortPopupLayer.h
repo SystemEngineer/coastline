@@ -25,18 +25,20 @@ public:
     void destoryBgSprite();
     void createTitle(const char* title, int fontzise, cocos2d::Point position);
     void createIntro(const char* intro, int fontzise, cocos2d::Point position);
-    bool addButton(const char* normal_img, const char* click_img, const char* title, int tag = 0);
+    void createCloseButton(cocos2d::Point position);
     
-    virtual bool onTouchBegan(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
-    virtual void onTouchEnded(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
+    //virtual bool onTouchBegan(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
+    //virtual void onTouchEnded(cocos2d::Touch *pTouch, cocos2d::Event *pEvent);
     
     cocos2d::EventListenerTouchOneByOne *_m_pListener;
+    void buttonCloseCallback(cocos2d::Ref* pSender);
 
 private:
     cocos2d::Sprite *_m_BgSprite;
     cocos2d::LabelTTF *_m_TitleLable;
     cocos2d::LabelTTF *_m_IntroLable;
     PortConfigHelper *_m_pPortConfHelper;
+    cocos2d::Menu *_m_CloseButton;
 };
 
 #endif

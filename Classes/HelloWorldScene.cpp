@@ -82,8 +82,8 @@ bool HelloWorld::init()
     auto str = String::createWithContentsOfFile(FileUtils::getInstance()->fullPathForFilename(file.c_str()).c_str());
     _TileMap = TMXTiledMap::createWithXML(str->getCString(), "");
     //Load background layer in tile map
-    _Background = _TileMap->layerNamed("Background");
-    _Land = _TileMap->layerNamed("LandLayer");
+    _Background = _TileMap->getLayer("Background");
+    _Land = _TileMap->getLayer("LandLayer");
     
     _Land->setVisible(false);
     addChild(_TileMap,-1);
@@ -209,13 +209,16 @@ void HelloWorld::setPlayerPosition(Point position)
                 //Attention to the position coord.
                 auto winSize = Director::getInstance()->getWinSize();
                 //Get port name by coord
-                CCString* tmp_str = CCString::createWithFormat("%d:%d",int(tileCoord.x),int(tileCoord.y));
+                __String* tmp_str = __String::createWithFormat("%d:%d",int(tileCoord.x),int(tileCoord.y));
                 pPopupLayer->createBgSprite(tmp_str->getCString(), Point(winSize.width/2, winSize.height/2));
                 
             }
         }
     }
-    _Player->setPosition(position);
+    Point to = Point(position.x,position.y);
+    float dt = 0.3;
+    MoveTo* move = MoveTo::create(dt,to);
+    _Player->runAction(move);
 }
 
 Point HelloWorld::getTileCoordForPosition(Point position)
