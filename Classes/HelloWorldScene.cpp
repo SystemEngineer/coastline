@@ -98,7 +98,8 @@ bool HelloWorld::init()
     int start_y = player_start_point["y"].asInt();
     
     //Create player sprite and put it to center
-    _Player = Sprite::create("ship1.png");
+    _Player = FloatingSprite::createWithFileAndLayer("ship1.png",this);
+    _Player->setParentLayer(this);
     _Player->setPosition(start_x,start_y);
     
     addChild(_Player);
@@ -181,10 +182,10 @@ void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event)
         playerPos.y >= 0 &&
         playerPos.x >= 0)
     {
+        _Player->moveTowardTarget(touchLocation);
         this->setPlayerPosition(playerPos);
-        
     }
-    
+    //Set current view postion, make sure the player is centered
     this->setViewPointCenter(_Player->getPosition());
 }
 
@@ -215,10 +216,12 @@ void HelloWorld::setPlayerPosition(Point position)
             }
         }
     }
-    Point to = Point(position.x,position.y);
-    float dt = 0.3;
-    MoveTo* move = MoveTo::create(dt,to);
-    _Player->runAction(move);
+    /*
+    Point PlayerMoveTo = Point(position.x,position.y);
+    float PlayerMoveDuration = 0.3;
+    MoveTo* PlayerMoveAction = MoveTo::create(PlayerMoveDuration,PlayerMoveTo);
+    _Player->runAction(PlayerMoveAction);
+     */
 }
 
 Point HelloWorld::getTileCoordForPosition(Point position)
@@ -226,4 +229,65 @@ Point HelloWorld::getTileCoordForPosition(Point position)
     int x = position.x/_TileMap->getTileSize().width;
     int y = ((_TileMap->getMapSize().height*_TileMap->getTileSize().height) - position.y)/_TileMap->getTileSize().height;
     return Point(x,y);
+}
+
+Point HelloWorld::getPositionForTileCoord(Point tileCoord)
+{
+    int x = tileCoord.x * _TileMap->getTileSize().width + _TileMap->getTileSize().width/2;
+    int y = _TileMap->getMapSize().height * _TileMap->getTileSize().height - tileCoord.y * _TileMap->getTileSize().height
+    - _TileMap->getTileSize().height/2;
+    return Point(x,y);
+}
+
+bool HelloWorld::isBlockageTile(Point tileCoord)
+{
+    int tileGID = _Land->getTileGIDAt(tileCoord);
+    if (tileGID) {
+        //Check if it is a blockage area. If so, ship cannot pass, move disabled.
+        auto properties = _TileMap->getPropertiesForGID(tileGID).asValueMap();
+        if (!properties.empty()) {
+            //Properties and values are defined in tiled map
+            //All attributes lies in the "LandLayer"
+            auto collision = properties["Blockage"].asString();
+            //auto dockable = properties["Port"].asString();
+            //Fix me: check if it is a port!
+            if ("True" == collision){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool HelloWorld::isValidTile(Point tileCoord)
+{
+    if((tileCoord.x < 0) || (tileCoord.y < 0)
+       ||(tileCoord.x > _TileMap->getMapSize().width)
+       ||(tileCoord.y > _TileMap->getMapSize().height)){
+           return false;
+       }
+       return true;
+}
+
+PointArray* HelloWorld::accessibleTilesAdjacentToTileCoord(const Point &curCoord)
+{
+    PointArray *tmp = PointArray::create(4);
+    
+    Point p(curCoord.x, curCoord.y - 1);
+    if((isValidTile(p)) && (!isBlockageTile(p))){
+        tmp->addControlPoint(p);
+    }
+    p.setPoint(curCoord.x, curCoord.y + 1);
+    if((isValidTile(p)) && (!isBlockageTile(p))){
+        tmp->addControlPoint(p);
+    }
+    p.setPoint(curCoord.x - 1, curCoord.y);
+    if((isValidTile(p)) && (!isBlockageTile(p))){
+        tmp->addControlPoint(p);
+    }
+    p.setPoint(curCoord.x + 1, curCoord.y);
+    if((isValidTile(p)) && (!isBlockageTile(p))){
+        tmp->addControlPoint(p);
+    }
+    return tmp;
 }

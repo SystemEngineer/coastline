@@ -2,6 +2,7 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "FloatingSprite.h"
 
 #define BACKGROUND_LAYER_TAG  1
 #define SHIP_LAYER_TAG        2
@@ -28,12 +29,16 @@ public:
     void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event *unused_event);
     void setPlayerPosition(cocos2d::Point position);
     cocos2d::Point getTileCoordForPosition(cocos2d::Point point);
+    cocos2d::Point getPositionForTileCoord(cocos2d::Point tileCoord);
+    bool isBlockageTile(cocos2d::Point point);
+    bool isValidTile(cocos2d::Point tileCoord);
+    cocos2d::PointArray* accessibleTilesAdjacentToTileCoord(const cocos2d::Point &curCoord);
     
 private:
     cocos2d::TMXTiledMap *_TileMap;
     cocos2d::TMXLayer *_Background;
     cocos2d::TMXLayer *_Land;
-    cocos2d::Sprite *_Player;
+    FloatingSprite *_Player;
     cocos2d::Scene *_RunningScene;
 };
 
