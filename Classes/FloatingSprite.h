@@ -59,7 +59,7 @@ private:
     //members for A-star
     cocos2d::Vector<PathStep*> _OpenSteps;
     cocos2d::Vector<PathStep*> _ClosedSteps;
-    cocos2d::Vector<PathStep*> _FoundedPathSteps;
+    cocos2d::Vector<PathStep*> _FoundPathSteps;
 };
 
 #endif /* defined(__coastline__FloatingSprite__) */

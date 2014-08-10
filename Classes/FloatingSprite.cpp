@@ -119,7 +119,7 @@ void FloatingSprite::moveTowardTarget(const Point &target)
     
     _OpenSteps.clear();
     _ClosedSteps.clear();
-    _FoundedPathSteps.clear();
+    _FoundPathSteps.clear();
     //Add current position(start position)
     this->insertInOpenSteps(PathStep::createWithPosition(fromTileCoord));
     do{
@@ -159,6 +159,8 @@ void FloatingSprite::moveTowardTarget(const Point &target)
             }else{
                 step = _OpenSteps.at(openIndex);
                 if((currentStep->getGScore() + moveCost) < step->getGScore()){
+                    //Fix me: why not set parent?
+                    step->setParent(currentStep);
                     step->setGScore(currentStep->getGScore() + moveCost);
                     step->retain();
                     _OpenSteps.erase(openIndex);
@@ -169,7 +171,7 @@ void FloatingSprite::moveTowardTarget(const Point &target)
         }
     }while(_OpenSteps.size() > 0);
     
-    if(_FoundedPathSteps.empty()){
+    if(_FoundPathSteps.empty()){
         log("Cannot find a path to the destination");
     }
 }
@@ -209,32 +211,35 @@ int FloatingSprite::calcCostFromStepToAdjacent(const PathStep *from, const PathS
 
 void FloatingSprite::buildFoundedPathSteps(PathStep *step)
 {
-    _FoundedPathSteps.clear();
+    _FoundPathSteps.clear();
     
     do{
         if(step->getParent()){
-            _FoundedPathSteps.insert(0, step);
+            _FoundPathSteps.insert(0, step);
         }
         step = step->getParent();
     }while(step);
     
-    for(const PathStep *s : _FoundedPathSteps){
+    for(const PathStep *s : _FoundPathSteps){
         log("%s",s->getDescription().c_str());
     }
 }
 
 void FloatingSprite::moveStepByStep()
 {
-    if(_FoundedPathSteps.empty()){
+    if(_FoundPathSteps.empty()){
         return;
     }
-    PathStep* step = _FoundedPathSteps.at(0);
-    
-    MoveTo* moveAction = MoveTo::create(0.2f, _HelloLayer->getPositionForTileCoord(step->getPosition()));
+    PathStep* step = _FoundPathSteps.at(0);
+    Point stepPos = _HelloLayer->getPositionForTileCoord(step->getPosition());
+    MoveTo* moveAction = MoveTo::create(0.2f, stepPos);
     CallFunc* moveCallback = CallFunc::create(CC_CALLBACK_0(FloatingSprite::moveStepByStep, this));
     
-    _FoundedPathSteps.erase(0);
+    _FoundPathSteps.erase(0);
     Sequence* moveSeq = Sequence::create(moveAction,moveCallback, NULL);
     this->runAction(moveSeq);
-    
+    if(_FoundPathSteps.empty()){
+        _HelloLayer->setPlayerPosition(stepPos);
+        _HelloLayer->setViewPointCenter(stepPos);
+    }
 }

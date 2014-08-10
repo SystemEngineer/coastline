@@ -156,37 +156,24 @@ void HelloWorld::onTouchEnded(Touch *touch, Event *unused_event)
     
     auto playerPos = _Player->getPosition();
     auto diff = touchLocation - playerPos;
-    if (abs(diff.x) > abs(diff.y)) {
-        if (diff.x > 0) {
-            //Move half of the tile block size each touch
-            playerPos.x += _TileMap->getTileSize().width ;
-            //Player may be fliped according its directory
-            _Player->runAction(actionTo2);
-        }
-        else {
-            playerPos.x -= _TileMap->getTileSize().width ;
-            _Player->runAction(actionTo1);
-        }
+    if (diff.x > 0) {
+        //Player may be fliped according its directory
+        _Player->runAction(actionTo2);
     }
     else {
-        if (diff.y > 0) {
-            playerPos.y += _TileMap->getTileSize().height ;
-        }
-        else {
-            playerPos.y -= _TileMap->getTileSize().height ;
-        }
+        _Player->runAction(actionTo1);
     }
     
-    if (playerPos.x <= (_TileMap->getMapSize().width * _TileMap->getTileSize().width) &&
-        playerPos.y <= (_TileMap->getMapSize().height * _TileMap->getTileSize().height) &&
-        playerPos.y >= 0 &&
-        playerPos.x >= 0)
+    if (touchLocation.x <= (_TileMap->getMapSize().width * _TileMap->getTileSize().width) &&
+        touchLocation.y <= (_TileMap->getMapSize().height * _TileMap->getTileSize().height) &&
+        touchLocation.y >= 0 &&
+        touchLocation.x >= 0)
     {
         _Player->moveTowardTarget(touchLocation);
-        this->setPlayerPosition(playerPos);
+        //this->setPlayerPosition(playerPos);
+        //Set current view postion, make sure the player is centered
+        //this->setViewPointCenter(_Player->getPosition());
     }
-    //Set current view postion, make sure the player is centered
-    this->setViewPointCenter(_Player->getPosition());
 }
 
 void HelloWorld::setPlayerPosition(Point position)
