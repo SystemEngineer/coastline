@@ -1,32 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="New_Town_Ex" tilewidth="32" tileheight="32" spacing="1" margin="1">
-  <image source="New_Town_Ex.png" width="544" height="416"/>
-  <terraintypes>
-   <terrain name="新地形" tile="-1"/>
-  </terraintypes>
-  <tile id="168">
-   <properties>
-    <property name="Port" value="True"/>
-   </properties>
-  </tile>
-  <tile id="169">
-   <properties>
-    <property name="Port" value="True"/>
-   </properties>
-  </tile>
-  <tile id="184">
-   <properties>
-    <property name="Port" value="True"/>
-   </properties>
-  </tile>
-  <tile id="185">
-   <properties>
-    <property name="Port" value="True"/>
-   </properties>
-  </tile>
- </tileset>
- <tileset firstgid="193" name="meta_tiles" tilewidth="32" tileheight="32" spacing="1" margin="1">
+ <tileset firstgid="1" name="meta_tiles" tilewidth="32" tileheight="32" spacing="1" margin="1">
   <image source="meta_tiles.png" width="67" height="34"/>
   <tile id="0">
    <properties>
@@ -39,9 +13,12 @@
    </properties>
   </tile>
  </tileset>
+ <tileset firstgid="3" name="New_Town_Ex" tilewidth="32" tileheight="32" spacing="1" margin="1">
+  <image source="New_Town_Ex.png" width="544" height="416"/>
+ </tileset>
  <layer name="Background" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   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
+   eJzt19EJwjAUhtE7oK6iG0gnUNfoFh3N+FAotQXFFn7lPJyXQAjh40IyVNUwcWkOE8eNdLNzeI8eWfTIokeWa3MrPdKMc6JHBj2y6JFFjyx96ZHEfGQ4Ned6fe9+26YLuNsv8h/MokcW//NMY5etetwD7vQP5vPyqedeLfbrsqZfWNMBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANjDAx7wrFM=
   </data>
  </layer>
  <objectgroup name="PlayerLayer" width="100" height="100">
@@ -49,7 +26,7 @@
  </objectgroup>
  <layer name="LandLayer" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt18EJgEAMAMH035VW5tuHyIkH+5iBNJAlj8zcHRuHdXq06NGiR4seTXq06NGiR4seLefoUeI+GnZ00OM7PVr0aNGjSY8mLZre9v30rwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/O0CMxsjFA==
+   eJzt1zEKgEAMAMHo/x9tbSFy4sEWM5APZEmRmbtj47BOjxY9WvRo0aNJjxY9WvRo0aPlHD1K3EfDjg56fKdHix4tejTp0aRF09u+n/4VAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC/XaCTAYU=
   </data>
  </layer>
 </map>

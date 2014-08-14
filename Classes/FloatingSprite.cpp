@@ -11,6 +11,8 @@
 
 USING_NS_CC;
 
+#define TAG_FOR_MOVING 1
+
 PathStep::PathStep():
 _Position(Point::ZERO),
 _GScore(0),
@@ -98,12 +100,14 @@ bool FloatingSprite::initWithLayer(HelloWorld *layer)
     _HelloLayer = layer;
     return true;
 }
-
+//This is the function for A-star pathfinding and moving
 void FloatingSprite::moveTowardTarget(const Point &target)
 {
     if(!_HelloLayer){
         return;
     }
+    //Stop current movint action and start a new pathfinding
+    this->stopActionByTag(TAG_FOR_MOVING);
     Point fromTileCoord = _HelloLayer->getTileCoordForPosition(this->getPosition());
     Point toTileCoord = _HelloLayer->getTileCoordForPosition(target);
     if(fromTileCoord == toTileCoord){
@@ -123,6 +127,7 @@ void FloatingSprite::moveTowardTarget(const Point &target)
     //Add current position(start position)
     this->insertInOpenSteps(PathStep::createWithPosition(fromTileCoord));
     do{
+        //1. get the top step in open steps array, push it to close steps array, then check the step
         PathStep* currentStep = _OpenSteps.at(0);
         _ClosedSteps.pushBack(currentStep);
         _OpenSteps.erase(0);
@@ -132,7 +137,7 @@ void FloatingSprite::moveTowardTarget(const Point &target)
         if(currentStep->getPosition() == toTileCoord){
             PathStep* tmpStep = currentStep;
             log("Path found");
-            
+            //Got the path, start moving to the target point
             buildFoundedPathSteps(tmpStep);
             moveStepByStep();
             
@@ -140,7 +145,7 @@ void FloatingSprite::moveTowardTarget(const Point &target)
             _ClosedSteps.clear();
             break;
         }
-        //Check all adjacent tiles:
+        //Check all adjacent tiles, put it into open steps array according to the F score
         PointArray* adjSteps = _HelloLayer->accessibleTilesAdjacentToTileCoord(currentStep->getPosition());
         for(ssize_t i = 0; i < adjSteps->count(); i++){
             PathStep* step = PathStep::createWithPosition(adjSteps->getControlPointAtIndex(i));
@@ -152,12 +157,14 @@ void FloatingSprite::moveTowardTarget(const Point &target)
             int moveCost = this->calcCostFromStepToAdjacent(currentStep, step);
             ssize_t openIndex = this->getStepIndex(_OpenSteps, step);
             if(openIndex == -1){
+                //this step is not in the open steps array, calc scores and put it into the array
                 step->setParent(currentStep);
                 step->setGScore(currentStep->getGScore() + moveCost);
                 step->setHScore(this->calcHScoreFromCoordToCoord(step->getPosition(), toTileCoord));
                 this->insertInOpenSteps(step);
             }else{
                 step = _OpenSteps.at(openIndex);
+                //this step is already in the open steps array ,recalc scores and refine the score and parent
                 if((currentStep->getGScore() + moveCost) < step->getGScore()){
                     //Fix me: why not set parent?
                     step->setParent(currentStep);
@@ -232,11 +239,12 @@ void FloatingSprite::moveStepByStep()
     }
     PathStep* step = _FoundPathSteps.at(0);
     Point stepPos = _HelloLayer->getPositionForTileCoord(step->getPosition());
-    MoveTo* moveAction = MoveTo::create(0.2f, stepPos);
+    MoveTo* moveAction = MoveTo::create(0.3f, stepPos);
     CallFunc* moveCallback = CallFunc::create(CC_CALLBACK_0(FloatingSprite::moveStepByStep, this));
     
     _FoundPathSteps.erase(0);
     Sequence* moveSeq = Sequence::create(moveAction,moveCallback, NULL);
+    moveSeq->setTag(TAG_FOR_MOVING);
     this->runAction(moveSeq);
     if(_FoundPathSteps.empty()){
         _HelloLayer->setPlayerPosition(stepPos);
